@@ -39,11 +39,7 @@ void display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        // Clear Screen and Depth Buffer
   glLoadIdentity();
-<<<<<<< HEAD
-  glTranslatef(0.0f,0.0f,-2.0f);
-=======
   glTranslatef(0.0f,0.0f,-5.0f);
->>>>>>> a6b039ca498f15a923b7cdbe8665e22b84d319f5
 
   // Rotate when user changes rotate_x and rotate_y
   glRotatef( rotate_x, 1.0, 0.0, 0.0 );
