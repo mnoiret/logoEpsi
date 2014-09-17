@@ -35,214 +35,214 @@ float epsiPolygone(float x1, float y1, float x2, float y2, float x3, float y3,fl
 
 /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** Functions ** ** ** ** ** ** ** ** ** ** ** ** ** */
 
-void display() 
+void display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        // Clear Screen and Depth Buffer
   glLoadIdentity();
-  glTranslatef(0.0f,0.0f,-2.0f);      
+  glTranslatef(0.0f,0.0f,-2.0f);
 
   // Rotate when user changes rotate_x and rotate_y
   glRotatef( rotate_x, 1.0, 0.0, 0.0 );
   glRotatef( rotate_y, 0.0, 1.0, 0.0 );
-  
+
   // Triangle Rouge
-  glBegin(GL_TRIANGLES);          
+  glBegin(GL_POLYGON);
     glColor3f(0.87f,0.13f,0.22f);
-    //Face avant      
-    glVertex3f(-1.0f,1.0f, 0.0f);  
-    glVertex3f(-1.0f,0.0f, 0.0f);  
-    glVertex3f(0.0f,1.0f, 0.0f);   
-    //Face arrière      
-    glVertex3f(-1.0f,1.0f, -0.2f);  
-    glVertex3f(-1.0f,0.0f, -0.2f);  
-    glVertex3f(0.0f,1.0f, -0.2f);   
-    //Face droite      
-    glVertex3f(-1.0f,1.0f, 0.0f);  
-    glVertex3f(-1.0f,0.0f, 0.0f);  
-    glVertex3f(-1.0f,1.0f, -0.2f);  
-    glVertex3f(-1.0f,0.0f, -0.2f);  
-    //Face gauche      
-    glVertex3f(-1.0f,1.0f, 0.0f);  
-    glVertex3f(0.0f,1.0f, 0.0f);   
-    glVertex3f(-1.0f,1.0f, -0.2f);  
-    glVertex3f(0.0f,1.0f, -0.2f);   
-    //Face hypothénuse      
-    glVertex3f(-1.0f,0.0f, 0.0f);  
-    glVertex3f(0.0f,1.0f, 0.0f);   
-    glVertex3f(-1.0f,0.0f, -0.2f);  
-    glVertex3f(0.0f,1.0f, -0.2f);   
+    //Face avant
+    glVertex3f(-1.0f,1.0f, 0.0f);
+    glVertex3f(-1.0f,0.0f, 0.0f);
+    glVertex3f(0.0f,1.0f, 0.0f);
+    //Face arrière
+    glVertex3f(-1.0f,1.0f, -0.2f);
+    glVertex3f(-1.0f,0.0f, -0.2f);
+    glVertex3f(0.0f,1.0f, -0.2f);
+    //Face droite
+    /*glVertex3f(-1.0f,1.0f, 0.0f);
+    glVertex3f(-1.0f,0.0f, 0.0f);
+    glVertex3f(-1.0f,1.0f, -0.2f);
+    glVertex3f(-1.0f,0.0f, -0.2f);*/
+    //Face gauche
+    /*glVertex3f(-1.0f,1.0f, 0.0f);
+    glVertex3f(0.0f,1.0f, 0.0f);
+    glVertex3f(-1.0f,1.0f, -0.2f);
+    glVertex3f(0.0f,1.0f, -0.2f);
+    //Face hypothénuse
+    glVertex3f(-1.0f,0.0f, 0.0f);
+    glVertex3f(0.0f,1.0f, 0.0f);
+    glVertex3f(0.0f,1.0f, -0.2f);
+    glVertex3f(-1.0f,0.0f, -0.2f);*/
   glEnd();
   // Triangle Vert
-  glBegin(GL_TRIANGLES);          
-    glColor3f(0.0f,0.68f,0.30f);  
-    //Face Avant 
-    glVertex3f(0.0f,0.0f, 0.0f);     
-    glVertex3f(1.0f,1.0f, 0.0f);  
-    glVertex3f(1.0f,-1.0f, 0.0f);   
-    //Face arrière 
-    glVertex3f(0.0f,0.0f, -0.2f);     
-    glVertex3f(1.0f,1.0f, -0.2f);  
-    glVertex3f(1.0f,-1.0f, -0.2f);   
-    //Face droite 
-    glVertex3f(0.0f,0.0f, 0.0f);     
-    glVertex3f(1.0f,1.0f, 0.0f);  
-    glVertex3f(0.0f,0.0f, -0.2f);     
-    glVertex3f(1.0f,1.0f, -0.2f);  
-    //Face gauche 
-    glVertex3f(0.0f,0.0f, 0.0f);    
-    glVertex3f(1.0f,-1.0f, 0.0f); 
-    glVertex3f(0.0f,0.0f, -0.2f);    
-    glVertex3f(1.0f,-1.0f, -0.2f);  
-    //Face hypothénuse 
-    glVertex3f(1.0f,1.0f, 0.0f);    
-    glVertex3f(1.0f,-1.0f, 0.0f); 
-    glVertex3f(1.0f,1.0f, -0.2f);    
-    glVertex3f(1.0f,-1.0f, -0.2f);   
+  /*glBegin(GL_TRIANGLES);
+    glColor3f(0.0f,0.68f,0.30f);
+    //Face Avant
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(1.0f,1.0f, 0.0f);
+    glVertex3f(1.0f,-1.0f, 0.0f);
+    //Face arrière
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(1.0f,1.0f, -0.2f);
+    glVertex3f(1.0f,-1.0f, -0.2f);
+    //Face droite
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(1.0f,1.0f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(1.0f,1.0f, -0.2f);
+    //Face gauche
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(1.0f,-1.0f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(1.0f,-1.0f, -0.2f);
+    //Face hypothénuse
+    glVertex3f(1.0f,1.0f, 0.0f);
+    glVertex3f(1.0f,-1.0f, 0.0f);
+    glVertex3f(1.0f,1.0f, -0.2f);
+    glVertex3f(1.0f,-1.0f, -0.2f);
   glEnd();
   // Triangle Bleu
-  glBegin(GL_TRIANGLES);          
-    glColor3f(0.0f,0.64f,0.80f);   
+  glBegin(GL_TRIANGLES);
+    glColor3f(0.0f,0.64f,0.80f);
     //Face Avant
-    glVertex3f(0.0f,0.0f, 0.0f);  
-    glVertex3f(-1.0f,-1.0f, 0.0f);  
-    glVertex3f(1.0f,-1.0f, 0.0f);   
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(-1.0f,-1.0f, 0.0f);
+    glVertex3f(1.0f,-1.0f, 0.0f);
     //Face arrière
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(-1.0f,-1.0f, -0.2f);  
-    glVertex3f(1.0f,-1.0f, -0.2f);    
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(-1.0f,-1.0f, -0.2f);
+    glVertex3f(1.0f,-1.0f, -0.2f);
     //Face droite
-    glVertex3f(0.0f,0.0f, 0.0f);  
-    glVertex3f(-1.0f,-1.0f, 0.0f);  
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(-1.0f,-1.0f, -0.2f);  
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(-1.0f,-1.0f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(-1.0f,-1.0f, -0.2f);
     //Face gauche
-    glVertex3f(0.0f,0.0f, 0.0f);  
-    glVertex3f(1.0f,-1.0f, 0.0f);  
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(1.0f,-1.0f, -0.2f);  
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(1.0f,-1.0f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(1.0f,-1.0f, -0.2f);
     //Face hypothénuse
-    glVertex3f(-1.0f,-1.0f, 0.0f);  
-    glVertex3f(1.0f,-1.0f, 0.0f);  
-    glVertex3f(-1.0f,-1.0f, -0.2f);  
-    glVertex3f(1.0f,-1.0f, -0.2f);    
+    glVertex3f(-1.0f,-1.0f, 0.0f);
+    glVertex3f(1.0f,-1.0f, 0.0f);
+    glVertex3f(-1.0f,-1.0f, -0.2f);
+    glVertex3f(1.0f,-1.0f, -0.2f);
   glEnd();
   // Triangle Orange
-  glBegin(GL_TRIANGLES);          
-    glColor3f(0.93f,0.50f,0.19f); 
-    //Face Avant  
-    glVertex3f(0.0f,0.0f, 0.0f);  
-    glVertex3f(0.5f,0.5f, 0.0f);  
-    glVertex3f(-0.5f,0.5f, 0.0f); 
-    //Face Arrière   
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(0.5f,0.5f, -0.2f);  
-    glVertex3f(-0.5f,0.5f, -0.2f); 
-    //Face droite  
-    glVertex3f(0.0f,0.0f, 0.0f);  
-    glVertex3f(-0.5f,0.5f, 0.0f); 
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(-0.5f,0.5f, -0.2f); 
-    //Face gauche  
-    glVertex3f(0.0f,0.0f, 0.0f);  
+  glBegin(GL_TRIANGLES);
+    glColor3f(0.93f,0.50f,0.19f);
+    //Face Avant
+    glVertex3f(0.0f,0.0f, 0.0f);
     glVertex3f(0.5f,0.5f, 0.0f);
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(0.5f,0.5f, -0.2f);   
-    //Face hypothénuse  
-    glVertex3f(0.5f,0.5f, 0.0f);  
-    glVertex3f(-0.5f,0.5f, 0.0f);    
-    glVertex3f(0.5f,0.5f, -0.2f);  
-    glVertex3f(-0.5f,0.5f, -0.2f);    
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    //Face Arrière
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(0.5f,0.5f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
+    //Face droite
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
+    //Face gauche
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(0.5f,0.5f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(0.5f,0.5f, -0.2f);
+    //Face hypothénuse
+    glVertex3f(0.5f,0.5f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    glVertex3f(0.5f,0.5f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
   glEnd();
   // Forme Jaune
-  glBegin(GL_POLYGON);          
-    glColor3f(0.99f,0.89f,0.18f); 
-    //Face Avant  
-    glVertex3f(0.0f,1.0f, 0.0f); 
-    glVertex3f(1.0f,1.0f, 0.0f); 
-    glVertex3f(0.5f,0.5f, 0.0f); 
-    glVertex3f(-0.5f,0.5f, 0.0f);    
-    //Face Arrière  
-    glVertex3f(0.0f,1.0f, -0.2f); 
-    glVertex3f(1.0f,1.0f, -0.2f); 
-    glVertex3f(0.5f,0.5f, -0.2f); 
-    glVertex3f(-0.5f,0.5f, -0.2f);    
-    //Face haute  
-    glVertex3f(0.0f,1.0f, 0.0f); 
-    glVertex3f(1.0f,1.0f, 0.0f); 
-    glVertex3f(0.0f,1.0f, -0.2f); 
-    glVertex3f(1.0f,1.0f, -0.2f);  
-    //Face droite  
-    glVertex3f(1.0f,1.0f, 0.0f); 
-    glVertex3f(0.5f,0.5f, 0.0f);  
-    glVertex3f(1.0f,1.0f, -0.2f); 
-    glVertex3f(0.5f,0.5f, -0.2f);   
-    //Face basse  
-    glVertex3f(0.5f,0.5f, 0.0f); 
-    glVertex3f(-0.5f,0.5f, 0.0f); 
-    glVertex3f(0.5f,0.5f, -0.2f); 
-    glVertex3f(-0.5f,0.5f, -0.2f);    
-    //Face gauche  
-    glVertex3f(0.0f,1.0f, 0.0f); 
-    glVertex3f(-0.5f,0.5f, 0.0f); 
-    glVertex3f(0.0f,1.0f, -0.2f); 
-    glVertex3f(-0.5f,0.5f, -0.2f);    
+  glBegin(GL_POLYGON);
+    glColor3f(0.99f,0.89f,0.18f);
+    //Face Avant
+    glVertex3f(0.0f,1.0f, 0.0f);
+    glVertex3f(1.0f,1.0f, 0.0f);
+    glVertex3f(0.5f,0.5f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    //Face Arrière
+    glVertex3f(0.0f,1.0f, -0.2f);
+    glVertex3f(1.0f,1.0f, -0.2f);
+    glVertex3f(0.5f,0.5f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
+    //Face haute
+    glVertex3f(0.0f,1.0f, 0.0f);
+    glVertex3f(1.0f,1.0f, 0.0f);
+    glVertex3f(0.0f,1.0f, -0.2f);
+    glVertex3f(1.0f,1.0f, -0.2f);
+    //Face droite
+    glVertex3f(1.0f,1.0f, 0.0f);
+    glVertex3f(0.5f,0.5f, 0.0f);
+    glVertex3f(1.0f,1.0f, -0.2f);
+    glVertex3f(0.5f,0.5f, -0.2f);
+    //Face basse
+    glVertex3f(0.5f,0.5f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    glVertex3f(0.5f,0.5f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
+    //Face gauche
+    glVertex3f(0.0f,1.0f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    glVertex3f(0.0f,1.0f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
   glEnd();
   // Forme Violette
-  glBegin(GL_POLYGON);          
-    glColor3f(0.62f, 0.2f, 0.54f); 
+  glBegin(GL_POLYGON);
+    glColor3f(0.62f, 0.2f, 0.54f);
     //face Avant
-    glVertex3f(0.0f,0.0f, 0.0f);  
-    glVertex3f(-0.5f,-0.5f, 0.0f);  
-    glVertex3f(-1.0f,0.0f, 0.0f);  
-    glVertex3f(-0.5f,0.5f, 0.0f);  
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(-0.5f,-0.5f, 0.0f);
+    glVertex3f(-1.0f,0.0f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
     //face Arrière
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(-0.5f,-0.5f, -0.2f);  
-    glVertex3f(-1.0f,0.0f, -0.2f);  
-    glVertex3f(-0.5f,0.5f, -0.2f);  
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(-0.5f,-0.5f, -0.2f);
+    glVertex3f(-1.0f,0.0f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
     //face haute droite
-    glVertex3f(0.0f,0.0f, 0.0f);   
-    glVertex3f(-0.5f,0.5f, 0.0f); 
-    glVertex3f(0.0f,0.0f, -0.2f);   
-    glVertex3f(-0.5f,0.5f, -0.2f);  
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
     //face basse droite
-    glVertex3f(0.0f,0.0f, 0.0f);  
-    glVertex3f(-0.5f,-0.5f, 0.0f);  
-    glVertex3f(0.0f,0.0f, -0.2f);  
-    glVertex3f(-0.5f,-0.5f, -0.2f);  
+    glVertex3f(0.0f,0.0f, 0.0f);
+    glVertex3f(-0.5f,-0.5f, 0.0f);
+    glVertex3f(0.0f,0.0f, -0.2f);
+    glVertex3f(-0.5f,-0.5f, -0.2f);
     //face basse gauche
-    glVertex3f(-0.5f,-0.5f, 0.0f);  
-    glVertex3f(-1.0f,0.0f, 0.0f);  
-    glVertex3f(-0.5f,-0.5f, -0.2f);  
-    glVertex3f(-1.0f,0.0f, -0.2f);  
+    glVertex3f(-0.5f,-0.5f, 0.0f);
+    glVertex3f(-1.0f,0.0f, 0.0f);
+    glVertex3f(-0.5f,-0.5f, -0.2f);
+    glVertex3f(-1.0f,0.0f, -0.2f);
     //face haute gauche
-    glVertex3f(-1.0f,0.0f, 0.0f);  
-    glVertex3f(-0.5f,0.5f, 0.0f);     
-    glVertex3f(-1.0f,0.0f, -0.2f);  
-    glVertex3f(-0.5f,0.5f, -0.2f);     
+    glVertex3f(-1.0f,0.0f, 0.0f);
+    glVertex3f(-0.5f,0.5f, 0.0f);
+    glVertex3f(-1.0f,0.0f, -0.2f);
+    glVertex3f(-0.5f,0.5f, -0.2f);
   glEnd();
   // Triangle Violet
-  glBegin(GL_TRIANGLES);          
-    glColor3f(0.39f, 0.15f, 0.4f); 
+  glBegin(GL_TRIANGLES);
+    glColor3f(0.39f, 0.15f, 0.4f);
     //Face Avant
-    glVertex3f(-1.3f,0.0f, 0.0f); 
-    glVertex3f(-0.8f,-0.5f, 0.0f); 
-    glVertex3f(-1.3f,-1.0f, 0.0f);     
-    //Face Arrière   
-    glVertex3f(-1.3f,0.0f, -0.2f); 
-    glVertex3f(-0.8f,-0.5f, -0.2f); 
+    glVertex3f(-1.3f,0.0f, 0.0f);
+    glVertex3f(-0.8f,-0.5f, 0.0f);
+    glVertex3f(-1.3f,-1.0f, 0.0f);
+    //Face Arrière
+    glVertex3f(-1.3f,0.0f, -0.2f);
+    glVertex3f(-0.8f,-0.5f, -0.2f);
     glVertex3f(-1.3f,-1.0f, -0.2f);
-    //Face haute  
-    //Face basse   
-    //Face Hypothénuse  
-  glEnd();
+    //Face haute
+    //Face basse
+    //Face Hypothénuse
+  glEnd();*/
 
   glFlush();
   glutSwapBuffers();
 
 }
 
-void initialize () 
+void initialize ()
 {
     glMatrixMode(GL_PROJECTION);                        // select projection matrix
     glViewport(0, 0, win.width, win.height);                  // set the viewport
@@ -256,7 +256,7 @@ void initialize ()
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
     glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );            // specify implementation-specific hints
-    glClearColor(0.0, 0.0, 0.0, 1.0);                     // specify clear values for the color buffers               
+    glClearColor(0.0, 0.0, 0.0, 1.0);                     // specify clear values for the color buffers
 }
 
 void specialKeys( int key, int x, int y ) {
@@ -279,7 +279,7 @@ void specialKeys( int key, int x, int y ) {
   glutPostRedisplay();
 }
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
   // set window values
   win.width = 600;
