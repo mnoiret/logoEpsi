@@ -2,8 +2,9 @@
 
 /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** Includes ** ** ** ** ** ** ** ** ** ** ** ** ** */
 
-#include <stdio.h>
+#include <iostream>
 #include <GL/glut.h>     // The GL Utility Toolkit (GLUT) Header
+#include <vector>
 
 /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** Constantes ** ** ** ** ** ** ** ** ** ** ** ** ** */
 
@@ -24,48 +25,64 @@ typedef struct {
 
 glutWindow win;
 
+struct Position{
+    float x;
+    float y;
+    Position(){};
+    Position(float x, float y): x(x),y(y){};
+};
+
+struct Couleur{
+    float r;
+    float g;
+    float b;
+    // Constructeur
+    Couleur(){};
+    Couleur(float r, float g, float b): r(r),g(g),b(b){};
+};
+
+struct Forme{
+    std::vector<Position> sommets;
+    Couleur couleur;
+    Position position;
+};
+
+struct Geometrie{
+    std::vector<Forme> formes;
+    float epaisseur;
+};
+
+struct Application{
+    Geometrie logoEpsi;
+    Geometrie logoGames;
+};
+Application application;
 
 /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** Prototypes ** ** ** ** ** ** ** ** ** ** ** ** ** */
 
 void specialKeys( int key, int x, int y );
-void display() ;
-float epsiTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float strength);
-float epsiPolygone(float x1, float y1, float x2, float y2, float x3, float y3,float x4, float y4, float strength);
+void display();
+void afficherGeometrie(Geometrie& geometrie);
+void chargerLogos();
+void My_timer_routine( int t );
 
 
 /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** Functions ** ** ** ** ** ** ** ** ** ** ** ** ** */
 
 void display()
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        // Clear Screen and Depth Buffer
+  // on efface l'écran
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  // initialiser la matrice de la caméra
   glLoadIdentity();
+  // positionnement de la caméra
   glTranslatef(0.0f,0.0f,-5.0f);
 
-  // Rotate when user changes rotate_x and rotate_y
+  // Tourne la caméra sur l'axe  X et Y
   glRotatef( rotate_x, 1.0, 0.0, 0.0 );
   glRotatef( rotate_y, 0.0, 1.0, 0.0 );
 
-  // Triangle Rouge
-    glColor3f(0.87f,0.13f,0.22f);
-    epsiTriangle(-1.0f,1.0f,-1.0f,0.0f,0.0f,1.0f,-0.2f);
-  // Triangle Orange
-    glColor3f(0.93f,0.50f,0.19f);
-    epsiTriangle(-0.5f,0.5f,0.5f,0.5f,0.0f,0.0f,-0.2f);
-  // Triangle Vert
-    glColor3f(0.0f,0.68f,0.30f);
-    epsiTriangle(1.0f,1.0f,1.0f,-1.0f,0.0f,0.0f,-0.2f);
-  // Triangle Bleu
-    glColor3f(0.0f,0.64f,0.80f);
-    epsiTriangle(1.0f,-1.0f,-1.0f,-1.0f,0.0f,0.0f,-0.2f);
-  // Polygone Violet
-    glColor3f(0.62f, 0.2f, 0.54f);
-    epsiPolygone(-0.5f,0.5f,0.0f,0.0f,-0.5f,-0.5f,-1.0f,0.0f,-0.2f);
-  // Polygone Jaune
-    glColor3f(0.99f,0.89f,0.18f);
-    epsiPolygone(0.0f,1.0f,1.0f,1.0f,0.5f,0.5f,-0.5f,0.5f,-0.2f);
-  // Triangle Violet
-    glColor3f(0.39f,0.15f,0.4f);
-    epsiTriangle(-1.3f,0.0f,-0.8f,-0.5f,-1.3f,-1.0f,-0.2f);
+    afficherGeometrie(application.logoEpsi);
 
   glFlush();
   glutSwapBuffers();
@@ -74,6 +91,19 @@ void display()
 
 void initialize ()
 {
+    // set window values
+  win.width = 600;
+  win.height = 600;
+  win.title = "TP1 - Logo EPSI ";
+  win.field_of_view_angle = 45;
+  win.z_near = 1.0f;
+  win.z_far = 500.0f;
+
+  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );  // Display Mode
+  glutInitWindowSize(win.width,win.height);         // set window size
+  glutCreateWindow(win.title);                // create Window
+
+
     glMatrixMode(GL_PROJECTION);                        // select projection matrix
     glViewport(0, 0, win.width, win.height);                  // set the viewport
     glMatrixMode(GL_PROJECTION);                        // set matrix mode
@@ -111,104 +141,122 @@ void specialKeys( int key, int x, int y ) {
 
 int main(int argc, char **argv)
 {
-  // set window values
-  win.width = 600;
-  win.height = 600;
-  win.title = "TP1 - Logo EPSI ";
-  win.field_of_view_angle = 45;
-  win.z_near = 1.0f;
-  win.z_far = 500.0f;
+  // On créer les logos
+    chargerLogos();
 
-  // initialize and run program
-  glutInit(&argc, argv);                                      // GLUT initialization
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH );  // Display Mode
-  glutInitWindowSize(win.width,win.height);         // set window size
-  glutCreateWindow(win.title);                // create Window
-  glutDisplayFunc(display);                 // register Display Function
-  glutIdleFunc( display );                  // register Idle Function
-  glutSpecialFunc(specialKeys);
+  // initialise Glut
+  glutInit(&argc, argv);
   initialize();
-  glutMainLoop();                       // run GLUT mainloop
+  // fait le lien entre le programme et l'affichage Glut
+  glutDisplayFunc(display);
+  glutIdleFunc(display);
+  // gestion des évènements clavier
+  glutSpecialFunc(specialKeys);
+    glutTimerFunc( 30, My_timer_routine, 0);
+  glutMainLoop();
   return 0;
 }
 
+void afficherGeometrie(Geometrie& geometrie)
+{
+    std::vector<Forme>::iterator it;
+    for(it = geometrie.formes.begin() ; it != geometrie.formes.end() ; it++)
+    {
+        glColor3f(it->couleur.r,it->couleur.g,it->couleur.b);
 
+        // Face avant
+        glBegin(GL_POLYGON);
+        std::vector<Position>::iterator sommet;
+        for(sommet = it->sommets.begin() ; sommet != it->sommets.end() ; sommet++)
+            glVertex3f( sommet->x, sommet->y , +geometrie.epaisseur / 2.f );
+        glEnd();
 
-float epsiTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float strength){
-  glBegin(GL_TRIANGLES);
-    glVertex3f( x1, y1 , 0.0f );
-    glVertex3f( x2, y2 , 0.0f );
-    glVertex3f( x3, y3 , 0.0f  );
-  glEnd() ;
+        // Contour
+        std::vector<Position>::iterator sommet2;
+        for(sommet = it->sommets.begin() ; sommet != it->sommets.end() ; sommet++)
+        {
+            glBegin(GL_POLYGON);
+            for(sommet2 = it->sommets.begin()+1 ; sommet2 != it->sommets.end() ; sommet2++)
+            {
+                glVertex3f( sommet2->x, sommet2->y , +geometrie.epaisseur / 2.f );
+                glVertex3f( sommet->x, sommet->y , +geometrie.epaisseur / 2.f );
+                glVertex3f( sommet->x, sommet->y , -geometrie.epaisseur / 2.f );
+                glVertex3f( sommet2->x, sommet2->y , -geometrie.epaisseur / 2.f );
+            }
+            glEnd();
+        }
 
-  glBegin(GL_POLYGON);
-    glVertex3f( x1, y1, 0.0f  );
-    glVertex3f( x2, y2, 0.0f  );
-    glVertex3f( x2, y2, strength );
-    glVertex3f( x1, y1, strength );
-  glEnd() ;
-
-  glBegin(GL_POLYGON);
-    glVertex3f( x2, y2, 0.0f  );
-    glVertex3f( x3, y3, 0.0f  );
-    glVertex3f( x3, y3, strength );
-    glVertex3f( x2, y2, strength );
-  glEnd() ;
-
-  glBegin(GL_POLYGON);
-    glVertex3f( x3, y3, 0.0f );
-    glVertex3f( x1, y1, 0.0f  );
-    glVertex3f( x1, y1, strength );
-    glVertex3f( x3, y3, strength );
-  glEnd() ;
-
-  glBegin(GL_TRIANGLES);
-    glVertex3f( x1, y1 , strength );
-    glVertex3f( x2, y2 , strength );
-    glVertex3f( x3, y3 , strength );
-  glEnd() ;
+        // Face arriere
+        glBegin(GL_POLYGON);
+        for(sommet = it->sommets.begin() ; sommet != it->sommets.end() ; sommet++)
+            glVertex3f( sommet->x, sommet->y , -geometrie.epaisseur / 2.f );
+        glEnd();
+    }
 }
 
-float epsiPolygone(float x1, float y1, float x2, float y2, float x3, float y3,float x4, float y4, float strength){
-  glBegin(GL_POLYGON);
-    glVertex3f( x1, y1 , 0.0f );
-    glVertex3f( x2, y2 , 0.0f );
-    glVertex3f( x3, y3 , 0.0f  );
-    glVertex3f( x4, y4 , 0.0f  );
-  glEnd() ;
+void chargerLogos()
+{
+    application.logoEpsi.epaisseur = 0.2f;
 
-  glBegin(GL_POLYGON);
-    glVertex3f( x1, y1 , 0.0f );
-    glVertex3f( x2, y2 , 0.0f );
-    glVertex3f( x2, y2 , strength );
-    glVertex3f( x1, y1 , strength );
-  glEnd() ;
+    Forme triangleRouge;
+    triangleRouge.couleur = Couleur(0.87f,0.13f,0.22f);
+    triangleRouge.sommets.push_back(Position(-1.0f,1.0f));
+    triangleRouge.sommets.push_back(Position(-1.0f,0.0f));
+    triangleRouge.sommets.push_back(Position(0.0f,1.0f));
+    application.logoEpsi.formes.push_back(triangleRouge);
 
-  glBegin(GL_POLYGON);
-    glVertex3f( x2, y2 , 0.0f );
-    glVertex3f( x3, y3 , 0.0f );
-    glVertex3f( x3, y3 , strength );
-    glVertex3f( x2, y2 , strength );
-  glEnd() ;
+    Forme triangleOrange;
+    triangleOrange.couleur = Couleur(0.93f,0.50f,0.19f);
+    triangleOrange.sommets.push_back(Position(-0.5f,0.5f));
+    triangleOrange.sommets.push_back(Position(0.5f,0.5f));
+    triangleOrange.sommets.push_back(Position(0.0f,0.0f));
+    application.logoEpsi.formes.push_back(triangleOrange);
 
-  glBegin(GL_POLYGON);
-    glVertex3f( x4, y4 , 0.0f );
-    glVertex3f( x3, y3 , 0.0f );
-    glVertex3f( x3, y3 , strength );
-    glVertex3f( x4, y4 , strength );
-  glEnd() ;
+    Forme triangleVert;
+    triangleVert.couleur = Couleur(0.0f,0.68f,0.30f);
+    triangleVert.sommets.push_back(Position(1.0f,1.0f));
+    triangleVert.sommets.push_back(Position(1.0f,-1.0f));
+    triangleVert.sommets.push_back(Position(0.0f,0.0f));
+    application.logoEpsi.formes.push_back(triangleVert);
 
-  glBegin(GL_POLYGON);
-    glVertex3f( x1, y1 , 0.0f );
-    glVertex3f( x4, y4 , 0.0f );
-    glVertex3f( x4, y4 , strength );
-    glVertex3f( x1, y1 , strength );
-  glEnd() ;
+    Forme triangleBleu;
+    triangleBleu.couleur = Couleur(0.0f,0.64f,0.80f);
+    triangleBleu.sommets.push_back(Position(1.0f,-1.0f));
+    triangleBleu.sommets.push_back(Position(-1.0f,-1.0f));
+    triangleBleu.sommets.push_back(Position(0.0f,0.0f));
+    application.logoEpsi.formes.push_back(triangleBleu);
 
-  glBegin(GL_POLYGON);
-    glVertex3f( x1, y1 , strength );
-    glVertex3f( x2, y2 , strength );
-    glVertex3f( x3, y3 , strength );
-    glVertex3f( x4, y4 , strength );
-  glEnd() ;
+    Forme polygoneViolet;
+    polygoneViolet.couleur = Couleur(0.62f, 0.2f, 0.54f);
+    polygoneViolet.sommets.push_back(Position(-0.5f,0.5f));
+    polygoneViolet.sommets.push_back(Position(0.0f,0.0f));
+    polygoneViolet.sommets.push_back(Position(-0.5f,-0.5f));
+    polygoneViolet.sommets.push_back(Position(-1.0f,0.0f));
+    application.logoEpsi.formes.push_back(polygoneViolet);
+
+    Forme polygoneJaune;
+    polygoneJaune.couleur = Couleur(0.99f,0.89f,0.18f);
+    polygoneJaune.sommets.push_back(Position(0.0f,1.0f));
+    polygoneJaune.sommets.push_back(Position(1.0f,1.0f));
+    polygoneJaune.sommets.push_back(Position(0.5f,0.5f));
+    polygoneJaune.sommets.push_back(Position(-0.5f,0.5f));
+    application.logoEpsi.formes.push_back(polygoneJaune);
+
+    Forme triangleViolet;
+    triangleViolet.couleur = Couleur(0.39f,0.15f,0.4f);
+    triangleViolet.sommets.push_back(Position(-1.3f,0.0f));
+    triangleViolet.sommets.push_back(Position(-0.8f,-0.5f));
+    triangleViolet.sommets.push_back(Position(-1.3f,-1.0f));
+    application.logoEpsi.formes.push_back(triangleViolet);
+
+}
+
+void My_timer_routine( int t )
+{
+// Animation code
+
+// Update display
+glutPostRedisplay();
+// Reset timer
+glutTimerFunc( 100, My_timer_routine, 0);
 }
