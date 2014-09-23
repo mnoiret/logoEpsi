@@ -5,6 +5,7 @@
 #include <iostream>
 #include <GL/glut.h>     // The GL Utility Toolkit (GLUT) Header
 #include <vector>
+#include <math.h>
 
 /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** Constantes ** ** ** ** ** ** ** ** ** ** ** ** ** */
 
@@ -45,6 +46,7 @@ struct Forme{
     std::vector<Position> sommets;
     Couleur couleur;
     Position position;
+    float rotation;
 };
 
 struct Geometrie{
@@ -54,7 +56,10 @@ struct Geometrie{
 
 struct Application{
     Geometrie logoEpsi;
+    Geometrie modele;
     Geometrie logoGames;
+    float temps;
+    float vitesse;
 };
 Application application;
 
@@ -64,15 +69,19 @@ void specialKeys( int key, int x, int y );
 void display();
 void afficherGeometrie(Geometrie& geometrie);
 void chargerLogos();
-void My_timer_routine( int t );
+void gestionTranslation(const Geometrie& depart, const Geometrie& arrivee, Geometrie& modele, float t);
 
 
 /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** Functions ** ** ** ** ** ** ** ** ** ** ** ** ** */
 
 void display()
 {
-  // on efface l'écran
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // on efface l'écran
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Initialiser le type de la matrice pour les modèles 3D
+    glMatrixMode( GL_MODELVIEW );
+
   // initialiser la matrice de la caméra
   glLoadIdentity();
   // positionnement de la caméra
@@ -82,7 +91,9 @@ void display()
   glRotatef( rotate_x, 1.0, 0.0, 0.0 );
   glRotatef( rotate_y, 0.0, 1.0, 0.0 );
 
-    afficherGeometrie(application.logoEpsi);
+    gestionTranslation(application.logoEpsi, application.logoGames, application.modele, application.temps);
+
+    afficherGeometrie(application.modele);
 
   glFlush();
   glutSwapBuffers();
@@ -134,6 +145,10 @@ void specialKeys( int key, int x, int y ) {
 
   else if (key == GLUT_KEY_DOWN)
     rotate_x -= 5;
+  else if (key == GLUT_KEY_PAGE_DOWN)
+    application.temps -= application.vitesse;
+  else if (key == GLUT_KEY_PAGE_UP)
+    application.temps += application.vitesse;
 
   //  Request display update
   glutPostRedisplay();
@@ -152,17 +167,24 @@ int main(int argc, char **argv)
   glutIdleFunc(display);
   // gestion des évènements clavier
   glutSpecialFunc(specialKeys);
-    glutTimerFunc( 30, My_timer_routine, 0);
   glutMainLoop();
   return 0;
 }
 
 void afficherGeometrie(Geometrie& geometrie)
 {
+    // On affiche chaque forme
     std::vector<Forme>::iterator it;
     for(it = geometrie.formes.begin() ; it != geometrie.formes.end() ; it++)
     {
         glColor3f(it->couleur.r,it->couleur.g,it->couleur.b);
+
+        // On applique la rotation et les translations
+        glPushMatrix();
+
+        // on doit d'abord faire le translate avant le rotate
+        glTranslatef(it->position.x, it->position.y, 0);
+        glRotatef( it->rotation, 0.0, 0.0, 1.0 );
 
         // Face avant
         glBegin(GL_POLYGON);
@@ -191,13 +213,64 @@ void afficherGeometrie(Geometrie& geometrie)
         for(sommet = it->sommets.begin() ; sommet != it->sommets.end() ; sommet++)
             glVertex3f( sommet->x, sommet->y , -geometrie.epaisseur / 2.f );
         glEnd();
+
+        glPopMatrix();
     }
 }
 
 void chargerLogos()
 {
     application.logoEpsi.epaisseur = 0.2f;
+    application.temps = 0;
+    application.vitesse = 15;
 
+    /************************************************
+    //      Logo EPSI
+    ************************************************/
+
+    Forme triangleRouge;
+    triangleRouge.couleur = Couleur(0.87f,0.13f,0.22f);
+    triangleRouge.sommets.push_back(Position(-1.0f,-0.5f));
+    triangleRouge.sommets.push_back(Position(0.0f,0.5f));
+    triangleRouge.sommets.push_back(Position(1.0f,-0.5f));
+    triangleRouge.position = Position(-1.0f,1.0f);
+    triangleRouge.rotation = 45;
+    application.logoEpsi.formes.push_back(triangleRouge);
+
+    Forme triangleOrange;
+    triangleOrange.couleur = Couleur(0.93f,0.50f,0.19f);
+    triangleOrange.sommets.push_back(Position(-0.5f,-0.25f));
+    triangleOrange.sommets.push_back(Position(0.0f,0.25f));
+    triangleOrange.sommets.push_back(Position(0.5f,-0.25f));
+    triangleOrange.position = Position(0.0f,0.5f);
+    triangleOrange.rotation = 180;
+    application.logoEpsi.formes.push_back(triangleOrange);
+
+    Forme polygoneViolet;
+    polygoneViolet.couleur = Couleur(0.62f, 0.2f, 0.54f);
+    polygoneViolet.sommets.push_back(Position(-0.5f,-0.5f));
+    polygoneViolet.sommets.push_back(Position(-0.5f,0.5f));
+    polygoneViolet.sommets.push_back(Position(0.5f,0.5f));
+    polygoneViolet.sommets.push_back(Position(0.5f,-0.5f));
+    polygoneViolet.position = Position(-0.5f,0.0f);
+    polygoneViolet.rotation = 45;
+    application.logoEpsi.formes.push_back(polygoneViolet);
+
+    /************************************************
+    //      Logo test
+    ************************************************/
+    application.logoGames = application.logoEpsi;
+    application.modele = application.logoEpsi;
+
+    application.logoGames.formes.at(0).position = Position(0.5f,0.5f);
+    application.logoGames.formes.at(0).rotation = 405;
+
+    application.logoGames.formes.at(1).position = Position(1,1.3f);
+    application.logoGames.formes.at(1).rotation = -90;
+
+    application.logoGames.formes.at(2).position = Position(0.5f,-1.5f);
+    application.logoGames.formes.at(2).rotation = 9494956;
+/*
     Forme triangleRouge;
     triangleRouge.couleur = Couleur(0.87f,0.13f,0.22f);
     triangleRouge.sommets.push_back(Position(-1.0f,1.0f));
@@ -247,16 +320,35 @@ void chargerLogos()
     triangleViolet.sommets.push_back(Position(-1.3f,0.0f));
     triangleViolet.sommets.push_back(Position(-0.8f,-0.5f));
     triangleViolet.sommets.push_back(Position(-1.3f,-1.0f));
-    application.logoEpsi.formes.push_back(triangleViolet);
+    application.logoEpsi.formes.push_back(triangleViolet);*/
 
 }
 
-void My_timer_routine( int t )
+void gestionTranslation(const Geometrie& depart, const Geometrie& arrivee, Geometrie& modele, float t)
 {
-// Animation code
+    if(depart.formes.size() != arrivee.formes.size())
+        return;
+    if(depart.formes.size() != modele.formes.size())
+        return;
 
-// Update display
-glutPostRedisplay();
-// Reset timer
-glutTimerFunc( 100, My_timer_routine, 0);
+    float d = 1000;
+    if( t > d )
+        t = d;
+    else if( t < 0 )
+        t = 0;
+
+    for(int i = 0 ; i<modele.formes.size() ; i++)
+    {
+        // Calcul la trajectoire de façon linéaire
+        float cx = arrivee.formes.at(i).position.x - depart.formes.at(i).position.x;
+        float cy = arrivee.formes.at(i).position.y - depart.formes.at(i).position.y;
+        float x = cx*t/d + depart.formes.at(i).position.x;
+        float y = cy*t/d + depart.formes.at(i).position.y;
+        modele.formes.at(i).position = Position(x, y);
+
+        // Calcul de la rotation de façon linéaire
+        float rx = arrivee.formes.at(i).rotation - depart.formes.at(i).rotation;
+        float r = rx*t/d + depart.formes.at(i).rotation;
+        modele.formes.at(i).rotation = r;
+    }
 }
